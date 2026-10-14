@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senioren mit Smartphone</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- JSZip für ZIP-Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav-leiste" role="banner">
+    <a href="#" class="nav-logo" onclick="zeigeAbschnitt('start'); return false;">
+      Senioren mit <span>Smartphone</span>
+    </a>
+    <nav aria-label="Hauptnavigation">
+      <ul class="nav-tabs" role="tablist">
+        <li role="presentation">
+          <button role="tab" aria-selected="true"
+            onclick="zeigeAbschnitt('start')"
+            id="tab-start" class="aktiv">Start</button>
+        </li>
+        <li role="presentation">
+          <button role="tab" aria-selected="false"
+            onclick="zeigeAbschnitt('praesentationen')"
+            id="tab-praesentationen">Präsentationen</button>
+        </li>
+        <li role="presentation">
+          <button role="tab" aria-selected="false"
+            onclick="zeigeAbschnitt('tipps')"
+            id="tab-tipps">Tipps &amp; Tricks</button>
+        </li>
+        <li role="presentation">
+          <button role="tab" aria-selected="false"
+            onclick="zeigeAbschnitt('links')"
+            id="tab-links">Links</button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Suche -->
+  <div class="suchbereich" role="search">
+    <div class="such-wrapper">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="search" id="suchfeld"
+             placeholder="Alle Inhalte durchsuchen …"
+             aria-label="Inhalte durchsuchen"
+             autocomplete="off"
+             oninput="sucheAktualisieren()">
+    </div>
+  </div>
+
+  <!-- Hauptinhalt -->
+  <main class="hauptinhalt" id="hauptinhalt" role="main">
+
+    <!-- Startseite -->
+    <section id="bereich-start" aria-labelledby="titel-start">
+      <h1 class="abschnitt-titel" id="titel-start">Willkommen</h1>
+      <div class="start-karte">
+        <p class="start-intro">
+          Herzlich willkommen auf der Kurswebsite <strong>Senioren mit Smartphone</strong>.
+          Hier finden Sie alle Präsentationen aus dem Kurs, praktische Tipps &amp; Tricks
+          sowie nützliche Links rund um Ihr Smartphone.
+        </p>
+      </div>
+      <h2 class="start-abschnitt-titel">Über den Kurs</h2>
+      <div class="start-karte">
+        <p>
+          Der Kurs findet wöchentlich statt und richtet sich an Einsteiger, die
+          den Umgang mit ihrem Smartphone Schritt für Schritt erlernen möchten.
+          Wir nutzen die <strong>Starthilfe-App</strong> als Lernhilfe und behandeln
+          jede Woche ein neues Thema — von den Grundlagen bis hin zu Google Maps,
+          Sicherheit im Internet und Künstlicher Intelligenz.
+        </p>
+      </div>
+      <h2 class="start-abschnitt-titel">Kurstermine</h2>
+      <div class="start-karte">
+        <ul class="start-liste">
+          <li><strong>Montag-Kurs:</strong> jeden Montag, 10:00 – 11:30 Uhr</li>
+          <li><strong>Mittwoch-Kurs:</strong> jeden Mittwoch, 14:00 – 15:30 Uhr</li>
+        </ul>
+        <p class="start-hinweis">Bitte passen Sie diese Angaben an Ihre tatsächlichen Zeiten an.</p>
+      </div>
+      <h2 class="start-abschnitt-titel">Nützliche Links</h2>
+      <div class="start-karte">
+        <ul class="start-linkliste">
+          <li>
+            <a href="https://IHRE-ORGANISATION.de" target="_blank" rel="noopener" class="start-link">
+              Website unserer Organisation
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Präsentationen -->
+    <section id="bereich-praesentationen" aria-labelledby="titel-praesentationen" hidden>
+      <h1 class="abschnitt-titel" id="titel-praesentationen">Wochenpräsentationen</h1>
+
+      <!-- Filter -->
+      <div class="filter-bereich" role="group" aria-label="Präsentationen filtern">
+        <div class="filter-gruppe">
+          <span class="filter-label">Kurs:</span>
+          <div class="filter-buttons" id="filter-kurs"></div>
+        </div>
+        <div class="filter-gruppe">
+          <span class="filter-label">Kursleiter:</span>
+          <div class="filter-buttons" id="filter-kursleiter"></div>
+        </div>
+        <div class="filter-gruppe">
+          <span class="filter-label">Format:</span>
+          <div class="filter-buttons" id="filter-format"></div>
+        </div>
+        <div class="filter-aktiv-hinweis" id="filter-hinweis" hidden>
+          <span id="filter-hinweis-text"></span>
+          <button class="filter-reset" onclick="alleFilterZuruecksetzen()">
+            Alle Filter zurücksetzen
+          </button>
+        </div>
+      </div>
+
+      <!-- Auswahl-Leiste -->
+      <div class="auswahl-leiste">
+        <label class="auswahl-alle-label">
+          <input type="checkbox" id="alle-auswaehlen"
+                 onchange="alleAuswaehlenUmschalten(this.checked)"
+                 aria-label="Alle sichtbaren Präsentationen auswählen">
+          <span>Alle auswählen</span>
+        </label>
+        <span class="auswahl-anzahl" id="auswahl-anzahl"></span>
+        <div class="auswahl-aktionen" id="auswahl-aktionen" hidden>
+          <button class="download-btn download-zip" onclick="alsZipHerunterladen()" id="zip-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Als ZIP herunterladen
+          </button>
+          <button class="download-btn download-einzeln" onclick="einzelnHerunterladen()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Einzeln öffnen
+          </button>
+        </div>
+      </div>
+
+      <!-- ZIP-Fortschritt -->
+      <div class="zip-fortschritt" id="zip-fortschritt" hidden>
+        <div class="zip-fortschritt-text" id="zip-fortschritt-text">ZIP wird erstellt …</div>
+        <div class="zip-fortschritt-balken-hülle">
+          <div class="zip-fortschritt-balken" id="zip-fortschritt-balken"></div>
+        </div>
+      </div>
+
+      <div class="praesentation-liste" id="liste-praesentationen"></div>
+    </section>
+
+    <!-- Tipps & Tricks -->
+    <section id="bereich-tipps" aria-labelledby="titel-tipps" hidden>
+      <h1 class="abschnitt-titel" id="titel-tipps">Tipps &amp; Tricks</h1>
+      <div class="tipp-liste" id="liste-tipps"></div>
+    </section>
+
+    <!-- Links -->
+    <section id="bereich-links" aria-labelledby="titel-links" hidden>
+      <h1 class="abschnitt-titel" id="titel-links">Links &amp; Ressourcen</h1>
+      <div class="links-liste" id="liste-links"></div>
+    </section>
+
+    <!-- Suchergebnisse -->
+    <section id="bereich-suche" aria-labelledby="titel-suche" hidden>
+      <h1 class="abschnitt-titel" id="titel-suche">Suchergebnisse</h1>
+      <div id="liste-suche"></div>
+    </section>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+
+  // ============================================================
+  // Icons
+  // ============================================================
+  const FORMAT_ICONS = {
+    pdf: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="9" y1="13" x2="15" y2="13"/>
+      <line x1="9" y1="17" x2="15" y2="17"/>
+      <polyline points="9 9 10 9 10 13"/></svg>`,
+    pptx: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+      <line x1="8" y1="21" x2="16" y2="21"/>
+      <line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+    html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <polyline points="16 18 22 12 16 6"/>
+      <polyline points="8 6 2 12 8 18"/></svg>`,
+    video: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <polygon points="23 7 16 12 23 17 23 7"/>
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>`,
+    docx: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="9" y1="13" x2="15" y2="13"/>
+      <line x1="9" y1="17" x2="15" y2="17"/>
+      <line x1="9" y1="9" x2="10" y2="9"/></svg>`
+  };
+
+  const ICON_EXTERN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round" aria-hidden="true">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+    <polyline points="15 3 21 3 21 9"/>
+    <line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+
+  const ICON_RUNTER = `<svg class="tipp-pfeil" width="20" height="20" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round" aria-hidden="true">
+    <polyline points="6 9 12 15 18 9"/></svg>`;
+
+  // ============================================================
+  // Hilfsfunktionen
+  // ============================================================
+  function datumFormatieren(iso) {
+    const monate = ["Januar","Februar","März","April","Mai","Juni",
+                    "Juli","August","September","Oktober","November","Dezember"];
+    const [j, m, t] = iso.split("-").map(Number);
+    return `${t}. ${monate[m-1]} ${j}`;
+  }
+
+  function kategorieklasse(kat) {
+    const map = {
+      "Sicherheit":             "kat-sicherheit",
+      "Google Maps":            "kat-google-maps",
+      "Allgemein":              "kat-allgemein",
+      "Starthilfe":             "kat-starthilfe",
+      "Starthilfe-App":         "kat-starthilfe",
+      "Künstliche Intelligenz": "kat-ki",
+      "Navigation":             "kat-google-maps",
+      "Grundlagen":             "kat-allgemein"
+    };
+    return map[kat] || "kat-standard";
+  }
+
+  function kursklasse(kurs) {
+    if (kurs === "Montag")   return "kat-allgemein";
+    if (kurs === "Mittwoch") return "kat-google-maps";
+    return "kat-standard";
+  }
+
+  // Dateiname aus Pfad oder URL ableiten
+  function dateiname(datei) {
+    return datei.split("/").pop().split("?")[0] || datei;
+  }
+
+  // ============================================================
+  // Filter-Status & sichtbare Präsentationen
+  // ============================================================
+  const aktiveFilter = { kurs: null, kursleiter: null, format: null };
+  let sichtbarePraesentationen = [];  // aktuell gefilterte Liste
+  let ausgewaehlt = new Set();        // IDs der ausgewählten Präsentationen
+
+  // ============================================================
+  // Präsentationskarte rendern
+  // ============================================================
+  function praesentationHTML(p, kompakt) {
+    const badgeText   = p.neu ? `Neu · ${datumFormatieren(p.datum)}` : datumFormatieren(p.datum);
+    const badgeKlasse = p.neu ? "neu" : "normal";
+    const istAusgewaehlt = ausgewaehlt.has(p.id);
+
+    // Welche Dateien zeigen? Format-Filter beachten
+    const sichtbareDateien = aktiveFilter.format
+      ? p.dateien.filter(d => d.typ === aktiveFilter.format)
+      : p.dateien;
+
+    const buttons = sichtbareDateien.map(d => {
+      const fmt    = FORMATE[d.typ] || { label: d.typ + " öffnen", neuerTab: true };
+      const icon   = FORMAT_ICONS[d.typ] || "";
+      const extern = d.datei.startsWith("http");
+      const ziel   = (fmt.neuerTab || extern) ? 'target="_blank" rel="noopener"' : "";
+      return `<a class="oeffnen-button format-${d.typ}" href="${d.datei}" ${ziel}
+                 aria-label="${fmt.label}: ${p.titel}">
+                ${icon} ${fmt.label}
+              </a>`;
+    }).join("");
+
+    // Im Suchmodus keine Checkbox
+    if (kompakt) {
+      return `
+        <article class="praesentation-eintrag">
+          <div class="praesentation-kopf">
+            <span class="datum-badge ${badgeKlasse}">${badgeText}</span>
+            <span class="kurs-badge ${kursklasse(p.kurs)}">${p.kurs}</span>
+          </div>
+          <div class="praesentation-titel">${p.titel}</div>
+          <div class="praesentation-meta">${p.kursleiter}</div>
+          <div class="button-gruppe">${buttons}</div>
+        </article>`;
+    }
+
+    return `
+      <article class="praesentation-eintrag ${istAusgewaehlt ? "ausgewaehlt" : ""}"
+               id="karte-${p.id}">
+        <div class="praesentation-auswahl-kopf">
+          <label class="auswahl-label">
+            <input type="checkbox" class="praes-checkbox"
+                   data-id="${p.id}"
+                   ${istAusgewaehlt ? "checked" : ""}
+                   onchange="auswahlAendern('${p.id}', this.checked)"
+                   aria-label="${p.titel} auswählen">
+            <div class="praesentation-kopf-inline">
+              <span class="datum-badge ${badgeKlasse}">${badgeText}</span>
+              <span class="kurs-badge ${kursklasse(p.kurs)}">${p.kurs}</span>
+            </div>
+          </label>
+        </div>
+        <div class="praesentation-titel">${p.titel}</div>
+        <div class="praesentation-meta">${p.kursleiter}</div>
+        <p class="praesentation-beschreibung">${p.beschreibung}</p>
+        <div class="button-gruppe">${buttons}</div>
+      </article>`;
+  }
+
+  function tippHTML(t) {
+    const kat = kategorieklasse(t.kategorie);
+    return `
+      <div class="tipp-eintrag" id="tipp-${t.id}">
+        <button class="tipp-kopf" onclick="tippUmschalten('${t.id}')"
+                aria-expanded="false" aria-controls="inhalt-${t.id}">
+          <span class="tipp-kategorie ${kat}">${t.kategorie}</span>
+          <span class="tipp-titel">${t.titel}</span>
+          ${ICON_RUNTER}
+        </button>
+        <div class="tipp-inhalt" id="inhalt-${t.id}" role="region">
+          <p class="tipp-beschreibung">${t.beschreibung}</p>
+          <p class="tipp-text">${t.inhalt}</p>
+        </div>
+      </div>`;
+  }
+
+  function linkHTML(l) {
+    const kat = kategorieklasse(l.kategorie);
+    return `
+      <div class="link-eintrag">
+        <span class="link-kategorie-label ${kat}">${l.kategorie}</span>
+        <div class="link-inhalt">
+          <a class="link-name" href="${l.url}" target="_blank" rel="noopener">
+            ${l.name} ${ICON_EXTERN}
+          </a>
+          <p class="link-beschreibung">${l.beschreibung}</p>
+        </div>
+      </div>`;
+  }
+
+  // ============================================================
+  // Auswahl-Logik
+  // ============================================================
+  function auswahlAendern(id, checked) {
+    if (checked) ausgewaehlt.add(id);
+    else         ausgewaehlt.delete(id);
+    auswahlLeisteAktualisieren();
+    alleCheckboxSyncen();
+  }
+
+  function alleAuswaehlenUmschalten(checked) {
+    if (checked) sichtbarePraesentationen.forEach(p => ausgewaehlt.add(p.id));
+    else         ausgewaehlt.clear();
+    praesListeAktualisieren();
+    auswahlLeisteAktualisieren();
+  }
+
+  function alleCheckboxSyncen() {
+    const alle = document.getElementById("alle-auswaehlen");
+    if (!alle) return;
+    const anzahlSichtbar   = sichtbarePraesentationen.length;
+    const anzahlAusgewaehlt = sichtbarePraesentationen.filter(p => ausgewaehlt.has(p.id)).length;
+    alle.checked       = anzahlSichtbar > 0 && anzahlAusgewaehlt === anzahlSichtbar;
+    alle.indeterminate = anzahlAusgewaehlt > 0 && anzahlAusgewaehlt < anzahlSichtbar;
+  }
+
+  function auswahlLeisteAktualisieren() {
+    // Nur sichtbare ausgewählte zählen
+    const ausgewaehlteSichtbare = sichtbarePraesentationen.filter(p => ausgewaehlt.has(p.id));
+    const n = ausgewaehlteSichtbare.length;
+    const anzahlEl  = document.getElementById("auswahl-anzahl");
+    const aktionenEl = document.getElementById("auswahl-aktionen");
+    if (n > 0) {
+      anzahlEl.textContent = `${n} ausgewählt`;
+      aktionenEl.hidden = false;
+    } else {
+      anzahlEl.textContent = "";
+      aktionenEl.hidden = true;
+    }
+    alleCheckboxSyncen();
+  }
+
+  // ============================================================
+  // Download: einzeln (neue Tabs)
+  // ============================================================
+  function einzelnHerunterladen() {
+    const dateien = ausgewaehlteGetDateien();
+    if (dateien.length === 0) return;
+    dateien.forEach((d, i) => {
+      // Kurze Verzögerung damit Browser Popup-Blocker nicht greift
+      setTimeout(() => window.open(d.datei, "_blank", "noopener"), i * 300);
+    });
+  }
+
+  // ============================================================
+  // Download: ZIP
+  // ============================================================
+  async function alsZipHerunterladen() {
+    const dateien = ausgewaehlteGetDateien();
+    if (dateien.length === 0) return;
+
+    const fortschritt = document.getElementById("zip-fortschritt");
+    const fortschrittText = document.getElementById("zip-fortschritt-text");
+    const fortschrittBalken = document.getElementById("zip-fortschritt-balken");
+    const zipBtn = document.getElementById("zip-btn");
+
+    fortschritt.hidden = false;
+    zipBtn.disabled = true;
+    zipBtn.textContent = "Wird erstellt …";
+
+    const zip = new JSZip();
+    let geladen = 0;
+
+    // Dateinamen-Kollisionen vermeiden
+    const namenZähler = {};
+
+    for (const d of dateien) {
+      try {
+        fortschrittText.textContent = `Lade: ${dateiname(d.datei)} …`;
+        fortschrittBalken.style.width = `${Math.round((geladen / dateien.length) * 100)}%`;
+
+        const response = await fetch(d.datei);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+
+        let name = dateiname(d.datei);
+        if (namenZähler[name] !== undefined) {
+          namenZähler[name]++;
+          const teile = name.split(".");
+          const ext   = teile.pop();
+          name = `${teile.join(".")}_${namenZähler[name]}.${ext}`;
+        } else {
+          namenZähler[name] = 0;
+        }
+
+        zip.file(name, blob);
+      } catch (e) {
+        console.warn("Datei konnte nicht geladen werden:", d.datei, e);
+      }
+      geladen++;
+      fortschrittBalken.style.width = `${Math.round((geladen / dateien.length) * 100)}%`;
+    }
+
+    fortschrittText.textContent = "ZIP wird zusammengestellt …";
+    const zipBlob = await zip.generateAsync({ type: "blob" },
+      meta => { fortschrittBalken.style.width = `${Math.round(meta.percent)}%`; }
+    );
+
+    // Download auslösen
+    const url  = URL.createObjectURL(zipBlob);
+    const link = document.createElement("a");
+    link.href     = url;
+    link.download = "Senioren-mit-Smartphone.zip";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    fortschritt.hidden = true;
+    fortschrittBalken.style.width = "0%";
+    zipBtn.disabled = false;
+    zipBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Als ZIP herunterladen`;
+  }
+
+  // Gibt alle Dateien der ausgewählten sichtbaren Präsentationen zurück
+  // Format-Filter wird berücksichtigt
+  function ausgewaehlteGetDateien() {
+    return sichtbarePraesentationen
+      .filter(p => ausgewaehlt.has(p.id))
+      .flatMap(p => aktiveFilter.format
+        ? p.dateien.filter(d => d.typ === aktiveFilter.format)
+        : p.dateien
+      );
+  }
+
+  // ============================================================
+  // Filter
+  // ============================================================
+  function filterAufbauen() {
+    const kurse    = [...new Set(SITE_DATA.praesentationen.map(p => p.kurs))];
+    const leiter   = [...new Set(SITE_DATA.praesentationen.map(p => p.kursleiter))];
+    const formate  = [...new Set(
+      SITE_DATA.praesentationen.flatMap(p => p.dateien.map(d => d.typ))
+    )];
+    renderFilterGruppe("filter-kurs",       kurse,  "kurs");
+    renderFilterGruppe("filter-kursleiter", leiter, "kursleiter");
+    renderFilterGruppe("filter-format",     formate,"format",
+      w => (FORMATE[w] ? FORMATE[w].label.replace(" öffnen","").replace(" ansehen","") : w)
+    );
+    filterHinweisAktualisieren();
+  }
+
+  function renderFilterGruppe(containerId, werte, typ, labelFn) {
+    const container = document.getElementById(containerId);
+    container.innerHTML =
+      filterButtonHTML("Alle", typ, null) +
+      werte.map(w => filterButtonHTML(labelFn ? labelFn(w) : w, typ, w)).join("");
+  }
+
+  function filterButtonHTML(label, typ, wert) {
+    const aktiv    = aktiveFilter[typ] === wert ? "aktiv" : "";
+    const wertAttr = wert === null ? "null" : `"${wert}"`;
+    return `<button class="filter-btn ${aktiv}"
+      onclick="filterSetzen('${typ}', ${wertAttr})">${label}</button>`;
+  }
+
+  function filterSetzen(typ, wert) {
+    aktiveFilter[typ] = (wert === "null" || wert === null) ? null : wert;
+    ausgewaehlt.clear();
+    filterAufbauen();
+    praesListeAktualisieren();
+  }
+
+  function alleFilterZuruecksetzen() {
+    aktiveFilter.kurs = null;
+    aktiveFilter.kursleiter = null;
+    aktiveFilter.format = null;
+    ausgewaehlt.clear();
+    filterAufbauen();
+    praesListeAktualisieren();
+  }
+
+  function filterHinweisAktualisieren() {
+    const aktive = Object.entries(aktiveFilter)
+      .filter(([, v]) => v !== null)
+      .map(([k, v]) => {
+        if (k === "format") {
+          const fmt = FORMATE[v];
+          return fmt ? fmt.label.replace(" öffnen","").replace(" ansehen","") : v;
+        }
+        return v;
+      });
+    const hinweis = document.getElementById("filter-hinweis");
+    const text    = document.getElementById("filter-hinweis-text");
+    if (aktive.length > 0) {
+      hinweis.hidden = false;
+      text.textContent = `Filter aktiv: ${aktive.join(" · ")}`;
+    } else {
+      hinweis.hidden = true;
+    }
+  }
+
+  // ============================================================
+  // Präsentationsliste aufbauen
+  // ============================================================
+  function praesListeAktualisieren() {
+    let gefiltert = SITE_DATA.praesentationen;
+    if (aktiveFilter.kurs) {
+      gefiltert = gefiltert.filter(p =>
+        p.kurs === aktiveFilter.kurs || p.kurs === "Beide");
+    }
+    if (aktiveFilter.kursleiter) {
+      gefiltert = gefiltert.filter(p => p.kursleiter === aktiveFilter.kursleiter);
+    }
+    if (aktiveFilter.format) {
+      gefiltert = gefiltert.filter(p =>
+        p.dateien.some(d => d.typ === aktiveFilter.format));
+    }
+    sichtbarePraesentationen = gefiltert;
+
+    const container = document.getElementById("liste-praesentationen");
+    container.innerHTML = gefiltert.length === 0
+      ? `<p class="keine-ergebnisse">Keine Präsentationen für diese Auswahl.</p>`
+      : gefiltert.map(p => praesentationHTML(p, false)).join("");
+
+    auswahlLeisteAktualisieren();
+  }
+
+  // ============================================================
+  // Tabs
+  // ============================================================
+  let aktiverAbschnitt = "start";
+
+  function zeigeAbschnitt(name) {
+    document.getElementById("suchfeld").value = "";
+    document.getElementById("bereich-suche").hidden = true;
+    const bereiche = ["start","praesentationen","tipps","links"];
+    bereiche.forEach(b => {
+      document.getElementById("bereich-" + b).hidden = (b !== name);
+      const tab = document.getElementById("tab-" + b);
+      tab.classList.toggle("aktiv", b === name);
+      tab.setAttribute("aria-selected", b === name ? "true" : "false");
+    });
+    aktiverAbschnitt = name;
+    window.scrollTo(0, 0);
+  }
+
+  function tippUmschalten(id) {
+    const eintrag = document.getElementById("tipp-" + id);
+    const btn     = eintrag.querySelector(".tipp-kopf");
+    const offen   = eintrag.classList.toggle("offen");
+    btn.setAttribute("aria-expanded", offen ? "true" : "false");
+  }
+
+  // ============================================================
+  // Suche
+  // ============================================================
+  function sucheAktualisieren() {
+    const q = document.getElementById("suchfeld").value.trim().toLowerCase();
+    if (q.length < 2) {
+      document.getElementById("bereich-suche").hidden = true;
+      ["start","praesentationen","tipps","links"].forEach(b =>
+        document.getElementById("bereich-" + b).hidden = (b !== aktiverAbschnitt)
+      );
+      return;
+    }
+    ["start","praesentationen","tipps","links"].forEach(b =>
+      document.getElementById("bereich-" + b).hidden = true
+    );
+    document.getElementById("bereich-suche").hidden = false;
+
+    const treffer = { praesentationen: [], tipps: [], links: [] };
+    SITE_DATA.praesentationen.forEach(p => {
+      const suchtext = [p.titel, p.beschreibung, p.thema, p.kursleiter,
+                        p.kurs, ...(p.schlagworte || []),
+                        ...p.dateien.map(d => d.typ)
+                       ].join(" ").toLowerCase();
+      if (suchtext.includes(q)) treffer.praesentationen.push(p);
+    });
+    SITE_DATA.tipps.forEach(t => {
+      if ([t.titel, t.beschreibung, t.inhalt, t.kategorie]
+          .join(" ").toLowerCase().includes(q)) treffer.tipps.push(t);
+    });
+    SITE_DATA.links.forEach(l => {
+      if ([l.name, l.beschreibung, l.kategorie]
+          .join(" ").toLowerCase().includes(q)) treffer.links.push(l);
+    });
+
+    const gesamt = treffer.praesentationen.length + treffer.tipps.length + treffer.links.length;
+    const container = document.getElementById("liste-suche");
+    if (gesamt === 0) {
+      container.innerHTML = `<p class="keine-ergebnisse">Keine Ergebnisse für „${q}"</p>`;
+      return;
+    }
+    let html = "";
+    if (treffer.praesentationen.length) {
+      html += `<div class="such-gruppe">
+        <p class="such-gruppe-titel">Präsentationen (${treffer.praesentationen.length})</p>
+        <div class="praesentation-liste">
+          ${treffer.praesentationen.map(p => praesentationHTML(p, true)).join("")}
+        </div></div>`;
+    }
+    if (treffer.tipps.length) {
+      html += `<div class="such-gruppe">
+        <p class="such-gruppe-titel">Tipps &amp; Tricks (${treffer.tipps.length})</p>
+        <div class="tipp-liste">${treffer.tipps.map(t => tippHTML(t)).join("")}</div>
+        </div>`;
+    }
+    if (treffer.links.length) {
+      html += `<div class="such-gruppe">
+        <p class="such-gruppe-titel">Links (${treffer.links.length})</p>
+        <div class="links-liste">${treffer.links.map(l => linkHTML(l)).join("")}</div>
+        </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  // ============================================================
+  // Initialisierung
+  // ============================================================
+  function initialisieren() {
+    filterAufbauen();
+    praesListeAktualisieren();
+    document.getElementById("liste-tipps").innerHTML =
+      SITE_DATA.tipps.map(t => tippHTML(t)).join("");
+    document.getElementById("liste-links").innerHTML =
+      SITE_DATA.links.map(l => linkHTML(l)).join("");
+  }
+
+  initialisieren();
+
+  </script>
+</body>
+</html>
