@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css">
   <!-- JSZip für ZIP-Downloads -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <!-- Marked.js für Markdown in Tipps & Tricks -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 </head>
 <body>
 
@@ -297,8 +299,18 @@
   // Präsentationskarte rendern
   // ============================================================
   function praesentationHTML(p, kompakt) {
-    const badgeText   = p.neu ? `Neu · ${datumFormatieren(p.datum)}` : datumFormatieren(p.datum);
-    const badgeKlasse = p.neu ? "neu" : "normal";
+    // Badge: Neu > Archiv > normales Datum
+    let badgeText, badgeKlasse;
+    if (p.neu) {
+      badgeText  = `Neu · ${datumFormatieren(p.datum)}`;
+      badgeKlasse = "neu";
+    } else if (p.archiv) {
+      badgeText  = "Archiv";
+      badgeKlasse = "archiv";
+    } else {
+      badgeText  = datumFormatieren(p.datum);
+      badgeKlasse = "normal";
+    }
     const istAusgewaehlt = ausgewaehlt.has(p.id);
 
     // Welche Dateien zeigen? Format-Filter beachten
@@ -356,6 +368,22 @@
 
   function tippHTML(t) {
     const kat = kategorieklasse(t.kategorie);
+
+    // Markdown → HTML (marked.js)
+    // Bilder bekommen automatisch lazy loading und Fehlerbehandlung
+    const renderer = new marked.Renderer();
+    renderer.image = (href, title, text) => `
+      <figure class="tipp-bild-container">
+        <img src="${href}"
+             alt="${text || title || t.titel}"
+             class="tipp-bild"
+             loading="lazy"
+             onerror="this.closest('figure').hidden=true">
+        ${title ? `<figcaption class="tipp-bild-beschriftung">${title}</figcaption>` : ""}
+      </figure>`;
+
+    const inhaltHTML = marked.parse(t.inhalt || "", { renderer });
+
     return `
       <div class="tipp-eintrag" id="tipp-${t.id}">
         <button class="tipp-kopf" onclick="tippUmschalten('${t.id}')"
@@ -366,7 +394,7 @@
         </button>
         <div class="tipp-inhalt" id="inhalt-${t.id}" role="region">
           <p class="tipp-beschreibung">${t.beschreibung}</p>
-          <p class="tipp-text">${t.inhalt}</p>
+          <div class="tipp-text markdown">${inhaltHTML}</div>
         </div>
       </div>`;
   }

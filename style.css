@@ -709,3 +709,64 @@ a:focus-visible {
   flex-wrap: wrap;
   gap: 6px;
 }
+
+/* --- Tipp-Bilder ------------------------------------------- */
+.tipp-bilder {
+  padding: var(--abstand-m) var(--abstand-m) 0;
+}
+
+/* Mehrere Bilder: nebeneinander auf breiten Screens */
+.tipp-bilder-mehrere {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--abstand-s);
+}
+
+.tipp-bild-container {
+  margin: 0;
+}
+
+.tipp-bild {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--grau-200);
+  display: block;
+  background: var(--grau-100); /* Platzhalter während Laden */
+}
+
+.tipp-bild-beschriftung {
+  font-size: 13px;
+  color: var(--grau-500);
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* Druckstil: Bilder immer anzeigen */
+@media print {
+  .tipp-bilder { padding: 0 0 var(--abstand-s); }
+}
+
+/* --- Archiv-Badge ------------------------------------------ */
+.datum-badge.archiv {
+  background: var(--grau-200);
+  color: var(--grau-500);
+}
+
+/* --- Markdown-Inhalt in Tipps ------------------------------ */
+.tipp-text.markdown { font-size: var(--schrift-basis); color: var(--grau-800); line-height: 1.7; }
+.tipp-text.markdown p  { margin-bottom: 0.9em; }
+.tipp-text.markdown p:last-child { margin-bottom: 0; }
+.tipp-text.markdown strong { font-weight: 700; color: var(--schwarz); }
+.tipp-text.markdown em { font-style: italic; }
+.tipp-text.markdown ul,
+.tipp-text.markdown ol { padding-left: 1.4em; margin-bottom: 0.9em; }
+.tipp-text.markdown li { margin-bottom: 0.3em; }
+.tipp-text.markdown ol { list-style: decimal; }
+.tipp-text.markdown ul { list-style: disc; }
+
+/* Bilder inline im Markdown */
+.tipp-text.markdown .tipp-bild-container { margin: var(--abstand-m) 0; }
+.tipp-text.markdown .tipp-bild-container:first-child { margin-top: 0; }

@@ -3,13 +3,9 @@
 // ============================================================
 //
 // FORMATE — Neue Formate hier eintragen; der Rest passt sich automatisch an.
-//   label    Text auf dem Öffnen-Button
-//   icon     "pdf" | "pptx" | "html" | "video" | "docx" (siehe index.html)
-//   neuerTab true = öffnet in neuem Tab/Fenster
-//
 const FORMATE = {
   pdf:   { label: "PDF öffnen",          icon: "pdf",   neuerTab: true  },
-  pptx:  { label: "PowerPoint öffnen",   icon: "pptx",  neuerTab: true  },
+  pptx:  { label: "PowerPoint ansehen",  icon: "pptx",  neuerTab: true  },
   html:  { label: "Präsentation öffnen", icon: "html",  neuerTab: false },
   video: { label: "Video ansehen",        icon: "video", neuerTab: true  },
   docx:  { label: "Word öffnen",          icon: "docx",  neuerTab: true  }
@@ -18,20 +14,14 @@ const FORMATE = {
 // ============================================================
 // PRÄSENTATIONEN
 // Felder:
-//   id           Eindeutige ID (z.B. "p5")
-//   datum        Datum im Format "JJJJ-MM-TT"
-//   titel        Titel der Präsentation
-//   beschreibung Kurzbeschreibung
-//   thema        Themenbereich (z.B. "Google Maps", "Sicherheit")
+//   id, datum, titel, beschreibung, thema
 //   kurs         "Montag" | "Mittwoch" | "Beide"
 //   kursleiter   Name des Kursleiters
-//   schlagworte  Array mit zusätzlichen Suchbegriffen
-//   neu          true = zeigt "Neu"-Badge an
+//   schlagworte  Array mit Suchbegriffen
+//   neu          true = "Neu"-Badge
 //   dateien      Array mit { typ, datei }
-//                typ:   Schlüssel aus FORMATE (z.B. "pdf", "pptx")
-//                datei: Lokaler Pfad ODER externer Link (OneDrive, Google Drive usw.)
+//                datei: Pfad relativ zum Repo-Root, z.B. "praesentationen/woche1.pdf"
 // ============================================================
-
 const SITE_DATA = {
 
   praesentationen: [
@@ -81,6 +71,22 @@ const SITE_DATA = {
       ]
     },
     {
+      id: "p0",
+      datum: "",
+      archiv: true,
+      titel: "Einführung: Was ist ein Smartphone?",
+      beschreibung: "Eine allgemeine Einführung in Smartphones — Aufbau, Betriebssysteme und grundlegende Begriffe.",
+      thema: "Grundlagen",
+      kurs: "Beide",
+      kursleiter: "Hans Schmidt",
+      schlagworte: ["einführung", "grundlagen", "betriebssystem", "android", "iphone"],
+      neu: false,
+      dateien: [
+        { typ: "pdf",  datei: "praesentationen/einfuehrung.pdf"  },
+        { typ: "pptx", datei: "praesentationen/einfuehrung.pptx" }
+      ]
+    },
+    {
       id: "p1",
       datum: "2025-05-22",
       titel: "Willkommen: Ihr Smartphone kennenlernen",
@@ -99,28 +105,62 @@ const SITE_DATA = {
 
   // ----------------------------------------------------------
   // TIPPS & TRICKS
+  // Felder: id, titel, beschreibung, inhalt, kategorie
+  // bilder (optional): Array mit { datei, beschriftung }
+  //   datei:        Pfad relativ zum Repo-Root, z.B. "bilder/tipp-passwort.jpg"
+  //   beschriftung: Optionaler Beschriftungstext unter dem Bild
   // ----------------------------------------------------------
   tipps: [
     {
       id: "t3",
       titel: "Sichere Passwörter erstellen und merken",
       beschreibung: "Wie Sie starke Passwörter nutzen, ohne sie zu vergessen.",
-      inhalt: "Ein sicheres Passwort hat mindestens 12 Zeichen und enthält Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen. Ein guter Trick: Denken Sie sich einen Satz aus, den Sie sich gut merken können, und nehmen Sie den ersten Buchstaben jedes Wortes. Zum Beispiel: \"Mein Hund Bello läuft jeden Tag 3 Runden!\" wird zu \"MHBljT3R!\"",
-      kategorie: "Sicherheit"
+      kategorie: "Sicherheit",
+      // Markdown: **fett**, *kursiv*, Listen, ![Beschriftung](bildpfad "Titel unter Bild")
+      inhalt: `Ein sicheres Passwort hat mindestens **12 Zeichen** und enthält:
+
+- Groß- und Kleinbuchstaben
+- Zahlen
+- Sonderzeichen (z.B. !, ?, #)
+
+![Beispiel eines sicheren Passworts](bilder/tipp-passwort-beispiel.jpg "Beispiel: So sieht ein sicheres Passwort aus")
+
+**Guter Trick:** Denken Sie sich einen Satz aus, den Sie sich gut merken können, und nehmen Sie den ersten Buchstaben jedes Wortes.
+
+*Beispiel:* "Mein Hund Bello läuft jeden Tag 3 Runden!" wird zu **MHBljT3R!**
+
+![Passwort-Einstellungen auf dem Smartphone](bilder/tipp-passwort-einstellungen.jpg "Wo Sie die Passwort-Einstellungen finden")`
     },
     {
       id: "t2",
       titel: "Offline-Karten herunterladen",
       beschreibung: "Navigation auch ohne Internetverbindung nutzen.",
-      inhalt: "In Google Maps können Sie Karten für bestimmte Gebiete herunterladen. Öffnen Sie Google Maps, tippen Sie auf Ihr Profilbild oben rechts, wählen Sie \"Offline-Karten\" und dann \"Eigene Karte auswählen\". Zoomen Sie auf das gewünschte Gebiet und tippen Sie auf \"Herunterladen\".",
-      kategorie: "Google Maps"
+      kategorie: "Google Maps",
+      inhalt: `In Google Maps können Sie Karten für bestimmte Gebiete herunterladen und **auch ohne Internet** nutzen.
+
+![Offline-Karten in Google Maps](bilder/tipp-maps-offline.jpg "So laden Sie Karten für die Offline-Nutzung herunter")
+
+**So geht's:**
+
+1. Öffnen Sie **Google Maps**
+2. Tippen Sie auf Ihr **Profilbild** oben rechts
+3. Wählen Sie **Offline-Karten**
+4. Tippen Sie auf **Eigene Karte auswählen**
+5. Zoomen Sie auf das gewünschte Gebiet
+6. Tippen Sie auf **Herunterladen**`
     },
     {
       id: "t1",
       titel: "Akkulaufzeit verlängern",
       beschreibung: "Einfache Einstellungen für mehr Akkudauer.",
-      inhalt: "Drei einfache Maßnahmen verlängern die Akkulaufzeit spürbar: 1. Bildschirmhelligkeit reduzieren, 2. WLAN und Bluetooth ausschalten, wenn Sie sie nicht brauchen, 3. Hintergrund-Apps schließen. Diese Einstellungen finden Sie alle unter \"Einstellungen\" auf Ihrem Smartphone.",
-      kategorie: "Allgemein"
+      kategorie: "Allgemein",
+      inhalt: `Drei einfache Maßnahmen verlängern die Akkulaufzeit spürbar:
+
+1. **Bildschirmhelligkeit reduzieren** — der Bildschirm verbraucht am meisten Strom
+2. **WLAN und Bluetooth ausschalten** — wenn Sie sie gerade nicht brauchen
+3. **Hintergrund-Apps schließen** — Apps, die Sie nicht nutzen, im Hintergrund beenden
+
+Diese Einstellungen finden Sie alle unter **Einstellungen** auf Ihrem Smartphone.`
     }
   ],
 
