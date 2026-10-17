@@ -30,7 +30,7 @@ const SITE_DATA = {
       datum: "2025-10-19",
       titel: "Google Maps: Navigation fürs Auto & Notfallinformation & Aktivierung",
       beschreibung: "Wie erstellt man eine Navigation fürs Autofahren und zwar mit Zwischenstopps. Wie gibt man seine Notfallinformationen,Kontaktpersonen und andere Daten und Einstellungen. Wie aktiviert man den Notfalldienst.",
-      thema: "Google Maps"
+      thema: "Google Maps",
       kurs: "Montag",
       kursleiter: "John Rauland",
       schlagworte: ["navigation", "karten", "auto", "route", "zwischenstopps", "Notfall","Notfallkontakt","Notfallinformationen","SOS","Notruf","112","Sperrbildschirm","Medizinische Informationen" ],
