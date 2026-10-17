@@ -27,17 +27,17 @@ const SITE_DATA = {
   praesentationen: [
     {
       id: "p4",
-      datum: "2025-06-12",
-      titel: "Google Maps: Navigation & Orte finden",
-      beschreibung: "Wie Sie mit Google Maps Adressen suchen, Routen planen und sich auch ohne Internetverbindung zurechtfinden.",
-      thema: "Google Maps",
-      kurs: "Mittwoch",
-      kursleiter: "Maria Müller",
-      schlagworte: ["navigation", "karten", "offline", "route"],
+      datum: "2025-10-19",
+      titel: "Google Maps: Navigation fürs Auto & Notfallinformation & Aktivierung",
+      beschreibung: "Wie erstellt man eine Navigation fürs Autofahren und zwar mit Zwischenstopps. Wie gibt man seine Notfallinformationen,Kontaktpersonen und andere Daten und Einstellungen. Wie aktiviert man den Notfalldienst.",
+      thema: "Google Maps", "Notfall & SOS"
+      kurs: "Montag",
+      kursleiter: "John Rauland",
+      schlagworte: ["navigation", "karten", "auto", "route", "zwischenstopps", "Notfall","Notfallkontakt","Notfallinformationen","SOS","Notruf","112","Sperrbildschirm","Medizinische Informationen" ],
       neu: true,
       dateien: [
         { typ: "pdf",  datei: "praesentationen/woche4.pdf"  },
-        { typ: "pptx", datei: "praesentationen/woche4.pptx" }
+        { typ: "pptx", datei: "https://1drv.ms/p/c/6af8775c7286bca9/IQD4m8eSKYpXQo3OPoacI87lARYuxTmVybSfxwJivEYOGX8?e=ctKwOo" }
       ]
     },
     {
