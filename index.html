@@ -86,7 +86,7 @@
       <h2 class="start-abschnitt-titel">Kurstermine</h2>
       <div class="start-karte">
         <ul class="start-liste">
-          <li><strong>Montag-Kurs:</strong> jeden Montag, 10:30 – 12:00 Uhr</li>
+          <li><strong>Montag-Kurs:</strong> jeden Montag, 13:00 – 12:00 Uhr</li>
           <li><strong>Mittwoch-Kurs:</strong> jeden Mittwoch, 14:45 – 16:15 Uhr</li>
         </ul>
         <p class="start-hinweis">Bitte passen Sie diese Angaben an Ihre tatsächlichen Zeiten an.</p>
@@ -558,7 +558,7 @@
   // ============================================================
   function filterAufbauen() {
     const kurse    = [...new Set(SITE_DATA.praesentationen.map(p => p.kurs))];
-    const leiter   = [...new Set(SITE_DATA.praesentationen.map(p => p.kursleiter))];
+    const leiter   = [...new Set(SITE_DATA.praesentationen.map(p => p.kursleiter))].filter(l => l !== "");
     const formate  = [...new Set(
       SITE_DATA.praesentationen.flatMap(p => p.dateien.map(d => d.typ))
     )];
@@ -579,7 +579,7 @@
 
   function filterButtonHTML(label, typ, wert) {
     const aktiv    = aktiveFilter[typ] === wert ? "aktiv" : "";
-    const wertAttr = wert === null ? "null" : `"${wert}"`;
+    const wertAttr = wert === null ? "null" : `'${wert}'`;
     return `<button class="filter-btn ${aktiv}"
       onclick="filterSetzen('${typ}', ${wertAttr})">${label}</button>`;
   }
