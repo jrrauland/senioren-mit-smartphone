@@ -45,7 +45,7 @@ const SITE_DATA = {
       titel: "Sicherheit & Datenschutz im Alltag",
       beschreibung: "Sichere Passwörter, Erkennung von Betrugsversuchen und wie Sie Ihre persönlichen Daten schützen.",
       kurs: "Montag",
-      kursleiter: "",
+      kursleiter: "NN",
       schlagworte: ["passwort", "betrug", "datenschutz", "phishing"],
       neu: false,
       dateien: [
@@ -59,7 +59,7 @@ const SITE_DATA = {
       titel: "Starthilfe-App: Erste Schritte",
       beschreibung: "Einführung in die Starthilfe-App und wie Sie damit selbstständig üben können.",
       kurs: "Montag",
-      kursleiter: "",
+      kursleiter: "NN",
       schlagworte: ["app", "üben", "einsteiger", "starthilfe"],
       neu: false,
       dateien: [
@@ -74,7 +74,7 @@ const SITE_DATA = {
       titel: "Einführung: Was ist ein Smartphone?",
       beschreibung: "Eine allgemeine Einführung in Smartphones — Aufbau, Betriebssysteme und grundlegende Begriffe.",
       kurs: "Montag",
-      kursleiter: "",
+      kursleiter: "NN",
       schlagworte: ["einführung", "grundlagen", "betriebssystem", "android", "iphone"],
       neu: false,
       dateien: [
@@ -88,7 +88,7 @@ const SITE_DATA = {
       titel: "Willkommen: Ihr Smartphone kennenlernen",
       beschreibung: "Ein erster Überblick: Tasten, Bildschirm, Einstellungen und die wichtigsten Gesten.",
       kurs: "Mittwoch",
-      kursleiter: "",
+      kursleiter: "NN",
       schlagworte: ["grundlagen", "tasten", "gesten", "einstellungen"],
       neu: false,
       dateien: [
