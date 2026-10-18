@@ -276,6 +276,7 @@
     };
     return map[kat] || "kat-standard";
   }
+  // Note: kategorieklasse() is retained for Tipps & Tricks and Links sections
 
   function kursklasse(kurs) {
     if (kurs === "Montag")   return "kat-allgemein";
@@ -690,7 +691,7 @@
 
     const treffer = { praesentationen: [], tipps: [], links: [] };
     SITE_DATA.praesentationen.forEach(p => {
-      const suchtext = [p.titel, p.beschreibung, p.thema, p.kursleiter,
+      const suchtext = [p.titel, p.beschreibung, p.kursleiter,
                         p.kurs, ...(p.schlagworte || []),
                         ...p.dateien.map(d => d.typ)
                        ].join(" ").toLowerCase();
